@@ -1,8 +1,13 @@
 export default class Popup{
     constructor({popupSelector}){
         this._popupElement = document.querySelector(popupSelector);
-        this._closeBtn = this._popupElement.querySelector("#modal-close-button")
+        this._closeBtn = this._popupElement.querySelector("#modal-close-button");
+        this._modalButton = this._popupElement.querySelector(".modal__button")
     }
+
+    renderLoading(isLoading, loadingText = "Saving...") {
+        this._modalButton.textContent = isLoading ? loadingText : this._modalButton.textContent;
+      }
 
     open(){
         this._popupElement.classList.add("modal_opened");

@@ -1,11 +1,15 @@
 
 export default class Card{
-    constructor({ link, name }, cardSelector, handleImageClick){
+    constructor(data, cardSelector, handleImageClick, deleteBtnHandler){
        
-       this._name = name;
-       this._link = link;
+       this._data = data
+       this._name =data.name;
+       this._link = data.link;
+       this.id = data._id
        this._cardSelector = cardSelector;
        this._handleImageClick = handleImageClick;
+       this._deleteBtnHandler = deleteBtnHandler;
+       this.isLiked = data.isLiked
     }
 
     _setEventListener(){
@@ -15,16 +19,16 @@ export default class Card{
 
     this._likeBtn.addEventListener('click', this._handleLikeIcon);
 
-    this._trashBtn.addEventListener('click', this._handleDeleteCard);
+    this._trashBtn.addEventListener('click', () => this._deleteBtnHandler(this));
 
     this._cardImg.addEventListener('click', () => (this._handleImageClick(this)));
     }
     
-    _handleImageClick({ link, name }){
+    _handleImageClick(data){
         this._imageModal = this._cardElement.querySelector("#image-popup-modal");
-        this._imageModalImg.src = link;
-        this._imageModalTitle.textContent = name;
-        this._imageModalImg.alt = name;
+        this._imageModalImg.src = data.link;
+        this._imageModalTitle.textContent = data.name;
+        this._imageModalImg.alt = data.name;
         open(this._imageModal);
     }
 
@@ -32,7 +36,12 @@ export default class Card{
         this._likeBtn.classList.toggle("card__like-button_active");
     }
 
-    _handleDeleteCard = () => {
+    handleLike(isLiked){
+        this.isLiked = isLiked
+        this._handleLikeIcon();
+    }
+
+    handleDeleteCard = () => {
         this._cardElement.remove();
         this._cardElement = null;
     }

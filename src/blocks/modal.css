@@ -62,7 +62,21 @@
     width: 358px;
 }
 
+.modal__form-confirm {
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    width: 358px;
+}
+
 .modal__input {
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 1);
+    min-height: 27.26px;
+    width: 100%;
+}
+
+.modal__input-profile{
     border: none;
     border-bottom: 1px solid rgba(0, 0, 0, 1);
     min-height: 27.26px;
@@ -91,6 +105,11 @@
     text-align: center;
     margin-top: 48px;
     box-shadow: none;
+}
+
+.confirm__button{
+    margin-top: 38px;
+   
 }
 
 .modal__button:hover{

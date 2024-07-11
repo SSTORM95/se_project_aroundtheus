@@ -18,9 +18,13 @@
             </header>
             <main class="content">
                 <section class="profile page__section">
-                    <img src="<%=require('./images/jacques-cousteau.jpeg')%>" 
-                    alt="Avatar" 
-                    class="profile__image">
+                   <div class="profile__image-container">
+                     <img src="<%=require('./images/jacques-cousteau.jpeg')%>" 
+                    alt="avatar" 
+                    class="profile__image"
+                    >
+                    <button class="profile-picture-button" type="button" id="profile-picture-btn"></button>
+                    </div>
                     <div class="profile__info">
                         <h1 class="profile__title">Jacques Cousteau</h1>
                         <button class="profile__edit-button" type="button" id="profile-edit-button"></button>
@@ -84,6 +88,34 @@
                 <h4 class="modal__image_caption"></h4>
             </div>
         </div>
+
+        
+<!-- confirm popup-->
+<div class="modal" id="confirm-modal">
+    <div class="modal__container">
+        <button class="modal__close" id="modal-close-button" type="button"></button>
+            <p class="modal__heading">Are you sure?</p>
+            <form id="confirm-form" class="modal__form-confirm">
+                <button class="modal__button confirm__button" type="submit" disabled id="confirm-delete-btn">Yes</button>
+            </form>
+    </div>
+</div>
+
+<!-- profile picture modal-->
+<div class="modal" id="profile-picture-modal">
+    <div class="modal__container">
+        <button class="modal__close" id="modal-close-button" type="button"></button>
+            <p class="modal__heading">Change profile picture</p>
+        <form id="profile-picture-form" class="modal__form">
+            <label class="modal__label">
+                <input type="url" name="link" class="modal__input-profile" placeholder="Image link" id="profile-photo-link" required>
+                <span class="modal__error" id="card-link-error"></span>
+            </label>
+            <button class="modal__button modal__button_disable" type="submit">Save</button>
+        </form>
+    </div>
+</div>
+
 
         <template id="card-template">
             <li class="card">
