@@ -91,10 +91,8 @@ function handleImageClick(card) {
 }
    
 const profileEditPopup = new PopupWithForm(
-    "#profile-edit-modal",
-    (userData) => {
-      handleEditProfileSubmit(userData);
-    }
+    "#profile-edit-modal", 
+    handleEditProfileSubmit()   
   );
   
 profileEditPopup.setEventListeners();
@@ -287,22 +285,40 @@ api.loadUserInfo()
   cardSection.renderItems(cards);
   
   })
+
 function handleEditProfileSubmit(){  
-  document.querySelector("#edit-form").addEventListener('submit', function (event) {
+  document.querySelector('#edit-form').addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent the default form submit
-    const name = document.querySelector('#profile-title').value;
-    const description = document.querySelector('#profile-description').value;
- 
-    api.updateUserInfo({ name, about: description })  // Ensure 'about' matches API's expected field
+
+    const nameInput = document.querySelector('#profile-title');
+    const descriptionInput = document.querySelector('#profile-description');
+    console.log('Name Input:', nameInput);
+    console.log('Description Input:', descriptionInput);
+    // Debug values
+    console.log('Name Input Value:', nameInput.value);
+    console.log('Description Input Value:', descriptionInput.value);
+
+
+    const name = nameInput.value.trim();
+    const about = descriptionInput.value.trim();
+
+    console.log('Form Values after trimming:', { name, about });
+
+    if (!name || !about) {
+        console.error('Name and description fields cannot be empty');
+        return;
+    }
+    const userData = { name, about };
+
+    api.updateUserInfo(userData)
         .then((updatedUserData) => {
             userInfo.setUserInfo(updatedUserData);
-            // Code to close the modal here
-            const modal = document.querySelector('#profile-edit-modal');
+            const modal = profileEditModal;
             modal.classList.remove('modal_opened'); // Assuming this class is used to manage modal visibility
             modal.querySelector('#edit-form').reset(); // Reset the form fields
         })
         .catch((err) => {
             console.error(`Update failed, Error: ${err}`);
         });
- });
+});
 }
