@@ -23,6 +23,10 @@ export default class PopupWithForm extends Popup{
       evt.target.reset()
     }
 
+    renderLoading(isLoading, loadingText = "Saving...") {
+      this._modalButton.textContent = isLoading ? loadingText : this._modalButton.textContent;
+    }
+
     setEventListeners(){
         super.setEventListeners();
         this._popupForm.addEventListener("submit", this._handleSubmit);

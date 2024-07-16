@@ -23,7 +23,7 @@ export default class Api{
             .then(this._handleResponse)
         }
 
-        updateUserInfo(userData) {
+    updateUserInfo(userData) {
           return fetch(`${this._baseUrl}/users/me`, {
               method: 'PATCH', // Or 'PUT' based on your API specification
               headers: this._headers,
@@ -38,16 +38,16 @@ export default class Api{
               return res.json();
           });
       }
-    addNewCard(card){
-      return fetch("https://around-api.en.tripleten-services.com/v1/cards", {
-        method: "POST",
-        headers: this._headers,
-        body: JSON.stringify({
-          name: `${card.name}`,
-          link: `${card.link}`
-        })
-      });
-    }
+    addNewCard(card) {
+        return fetch("https://around-api.en.tripleten-services.com/v1/cards", {
+          method: "POST",
+          headers: this._headers,
+          body: JSON.stringify({
+            name: `${card.title}`,
+            link: `${card.link}`
+          })
+        }).then((res) => { return res.json()});
+      }
 
     deleteCard(cardId){
       return fetch(`${this._baseUrl}/cards/${cardId}`, {
@@ -70,12 +70,12 @@ export default class Api{
       })
     }
 
-    changeProfileImg(url){
+    changeProfileImg(link){
       return fetch("https://around-api.en.tripleten-services.com/v1/users/me/avatar", {
         method: "PATCH",
         headers: this._headers,
         body: JSON.stringify({
-          avatar: url
+          avatar: link
         })
       })
     }

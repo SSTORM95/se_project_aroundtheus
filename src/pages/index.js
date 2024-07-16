@@ -121,7 +121,6 @@ function renderCard(data) {
   document.querySelector('.gallery__cards').prepend(card);
 }
 
-
 function createCard(data) {
   const card = new Card(
     data,
@@ -130,6 +129,7 @@ function createCard(data) {
     deleteBtnHandler,
     handleCardLike
   )
+  console.log('Data object passed to Card:', data);
   return card.getCard();
 }
 
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
   cardContainer.addEventListener('click', (evt) => {
     if (evt.target && evt.target.matches('#card-trash-button')) {
       evt.preventDefault();
-      deleteBtnHandler();  // Ensure this function is defined and accessible
+      deleteBtnHandler();
     }
   });
 });
@@ -179,35 +179,46 @@ const addFormValidator = new FormValidator(validationSettings, addCardForm);
 addFormValidator.enableValidation();
 
 // API REQUEST //
-
-function loadingHandler( request, modalSelector, reset, loadingText = "Saving..."){
-  modalSelector.renderLoading(true, loadingText);
-  request()
-    .then(() => {
-      modalSelector.close();
-
-      if (reset) {
-        modalSelector.reset();
-      }
-    })
-    
-    .catch(console.error)
-    .finally(() => {
-      modalSelector.renderLoading(false)
-    })
-}
+  function handleSubmit(
+    request,
+    popupInstance,
+    reset,
+    loadingText = "Saving..."
+  ) {
+    popupInstance.renderLoading(true, loadingText);
+    request()
+      .then(() => {
+        popupInstance.close();
+  
+        if (reset) {
+          popupInstance.reset();
+        }
+      })
+      .catch(console.error)
+      .finally(() => {
+        popupInstance.renderLoading(false);
+      });
+  }
+  
 
 function deleteBtnHandler(card) {
   deleteImgPopup.open();
-  return deleteImgPopup.deleteHandler(() => {
-    function handleRequest(){
-      return api.deleteCard(card.id).then(() => {
-        card.handleDeleteCard();        
-      })
-    }
-    loadingHandler( handleRequest, deleteImgPopup, false, "Deleting...")
-    
-  })
+  if (card && card.id) {
+    console.log('deleteBtnHandler called for card:', card.id);
+   
+    deleteImgPopup.deleteHandler(() => {
+      function handleRequest() {
+        console.log('API delete request for card:', card.id);
+        return api.deleteCard(card.id).then(() => {
+          console.log('API delete successful for card:', card.id);
+          card.handleDeleteCard();
+        });
+      }
+      handleSubmit(handleRequest, deleteImgPopup, false, "Deleting...");
+    });
+  } else {
+    console.error('Card or card.id is undefined');
+  }
 }
 
 function handleCardLike(card){
@@ -231,14 +242,6 @@ function handleCardLike(card){
   }
 }
 
-// function handleEditProfileSubmit(formData) {
-//   function handleRequest() {
-//     return api.updateUserInfo(formData).then(({ name, description }) => {
-//       userInfo.setUserInfo({ name, description });
-//     });
-//   }
-//   loadingHandler( handleRequest, profileEditPopup, true);
-// }
 
 function handleCardSubmit(inputValues) {
   function handleRequest() {
@@ -247,7 +250,7 @@ function handleCardSubmit(inputValues) {
     });
   }
 
-  loadingHandler(handleRequest, addCardPopup, true);
+  handleSubmit(handleRequest, addCardPopup, true);
 }
 
 function handleChangeAvatar(url){
@@ -256,12 +259,11 @@ function handleChangeAvatar(url){
       userInfo.updateProfileImage(res)
     });
   }
-  loadingHandler(handleRequest, editAvatarModal, true)
+  handleSubmit(handleRequest, editAvatarModal, true)
 }
 
 api.loadUserInfo()
     .then((userData) => {
-        console.log(userData); // Log the userData to verify its structure
         userInfo.updateProfileImage(userData);
         userInfo.setUserInfo({
             name: userData.name,
@@ -271,13 +273,14 @@ api.loadUserInfo()
     .catch((err) => {
         console.error(`Unable to process request, Error: ${err}`);
     });
+
   api
   .getInitialCards()
   .then((cards) => {
     const cardSection = new Section (
       {items: cards,
-          renderer : ({ link, name }) => {
-              renderCard({ link, name });
+          renderer : ({ link, name, id }) => {
+              renderCard({ link, name, id });
           }
       },
       ".gallery__cards" 
@@ -288,37 +291,27 @@ api.loadUserInfo()
 
 function handleEditProfileSubmit(){  
   document.querySelector('#edit-form').addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent the default form submit
+    event.preventDefault();
 
     const nameInput = document.querySelector('#profile-title');
     const descriptionInput = document.querySelector('#profile-description');
-    console.log('Name Input:', nameInput);
-    console.log('Description Input:', descriptionInput);
-    // Debug values
-    console.log('Name Input Value:', nameInput.value);
-    console.log('Description Input Value:', descriptionInput.value);
-
-
     const name = nameInput.value.trim();
     const about = descriptionInput.value.trim();
 
-    console.log('Form Values after trimming:', { name, about });
-
-    if (!name || !about) {
-        console.error('Name and description fields cannot be empty');
-        return;
-    }
     const userData = { name, about };
-
+function handleRequest(){
     api.updateUserInfo(userData)
         .then((updatedUserData) => {
             userInfo.setUserInfo(updatedUserData);
             const modal = profileEditModal;
-            modal.classList.remove('modal_opened'); // Assuming this class is used to manage modal visibility
-            modal.querySelector('#edit-form').reset(); // Reset the form fields
+            modal.classList.remove('modal_opened');
+            modal.querySelector('#edit-form').reset(); 
         })
         .catch((err) => {
             console.error(`Update failed, Error: ${err}`);
         });
+      }
+      handleSubmit(handleRequest, profileEditForm, true)
 });
+      
 }
