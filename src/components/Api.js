@@ -23,21 +23,22 @@ export default class Api{
             .then(this._handleResponse)
         }
 
-    updateUserInfo(userData) {
+        updateUserInfo(data) {
           return fetch(`${this._baseUrl}/users/me`, {
-              method: 'PATCH', // Or 'PUT' based on your API specification
-              headers: this._headers,
-              body: JSON.stringify(userData)
+            method: 'PATCH',
+            headers: this._headers,
+            body: JSON.stringify({
+              name: data.name,
+              about: data.about
+            })
           })
           .then(res => {
-              if (!res.ok) {
-                  return res.json().then((data) => {
-                      throw new Error(`Update failed with status ${res.status}: ${data.message}`);
-                  });
-              }
+            if (res.ok) {
               return res.json();
+            }
+            return Promise.reject(`Error: ${res.status}`);
           });
-      }
+        }
     addNewCard(card) {
         return fetch("https://around-api.en.tripleten-services.com/v1/cards", {
           method: "POST",

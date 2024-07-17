@@ -153,16 +153,6 @@ addNewCardBtn.addEventListener("click", () => {
     addCardPopup.open()
 })
 
-document.addEventListener('DOMContentLoaded', () => {
-  const cardContainer = document.querySelector('.gallery__cards');
-
-  cardContainer.addEventListener('click', (evt) => {
-    if (evt.target && evt.target.matches('#card-trash-button')) {
-      evt.preventDefault();
-      deleteBtnHandler();
-    }
-  });
-});
 
 document.querySelector("#profile-picture-btn").addEventListener("click", () => {
   editAvatarModal.open();
@@ -179,27 +169,44 @@ const addFormValidator = new FormValidator(validationSettings, addCardForm);
 addFormValidator.enableValidation();
 
 // API REQUEST //
-  function handleSubmit(
-    request,
-    popupInstance,
-    reset,
-    loadingText = "Saving..."
-  ) {
-    popupInstance.renderLoading(true, loadingText);
-    request()
-      .then(() => {
-        popupInstance.close();
-  
-        if (reset) {
-          popupInstance.reset();
-        }
-      })
-      .catch(console.error)
-      .finally(() => {
-        popupInstance.renderLoading(false);
-      });
+function handleSubmit(request, popupInstance, reset, loadingText = "Saving...") {
+  if (typeof popupInstance.renderLoading !== 'function') {
+    console.error('renderLoading is not a function on', popupInstance);
   }
+
+  console.log("Entering handleSubmit");
+  popupInstance.renderLoading(true, loadingText);
   
+  if (typeof request !== 'function') {
+    console.error('Request is not a function', request);
+    return;
+  }
+
+  console.log('Calling request function');
+
+  const result = request();
+
+  if (!(result instanceof Promise) || typeof result.then !== 'function') {
+    console.error('Request did not return a promise', result);
+    return;
+  }
+
+  result
+    .then(() => {
+      console.log("Request successful");
+      popupInstance.close();
+      if (reset) {
+        popupInstance.reset();
+      }
+    })
+    .catch((error) => {
+      console.error("Request failed:", error);
+    })
+    .finally(() => {
+      console.log("Resetting loading state");
+      popupInstance.renderLoading(false);
+    });
+}
 
 function deleteBtnHandler(card) {
   deleteImgPopup.open();
@@ -279,8 +286,8 @@ api.loadUserInfo()
   .then((cards) => {
     const cardSection = new Section (
       {items: cards,
-          renderer : ({ link, name, id }) => {
-              renderCard({ link, name, id });
+          renderer : ({ link, name, _id }) => {
+              renderCard({ link, name, _id });
           }
       },
       ".gallery__cards" 
@@ -300,6 +307,7 @@ function handleEditProfileSubmit(){
 
     const userData = { name, about };
 function handleRequest(){
+  console.log('Calling updateUserInfo with', userData);
     api.updateUserInfo(userData)
         .then((updatedUserData) => {
             userInfo.setUserInfo(updatedUserData);
@@ -311,7 +319,7 @@ function handleRequest(){
             console.error(`Update failed, Error: ${err}`);
         });
       }
-      handleSubmit(handleRequest, profileEditForm, true)
+      handleSubmit(handleRequest, profileEditPopup, true)
 });
       
 }

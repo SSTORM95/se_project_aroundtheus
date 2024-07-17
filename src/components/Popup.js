@@ -3,6 +3,7 @@ export default class Popup{
         this._popupElement = document.querySelector(popupSelector);
         this._closeBtn = this._popupElement.querySelector("#modal-close-button");
         this._modalButton = this._popupElement.querySelector(".modal__button")
+      
     }
 
     open(){
@@ -28,6 +29,10 @@ export default class Popup{
             this.close();
         }
     }
+    
+    renderLoading(isLoading, loadingText = "Deleting...") {
+        this._modalButton.textContent = isLoading ? loadingText : this._modalButton.textContent;
+      }
 
     setEventListeners(){
         
