@@ -229,9 +229,8 @@ function handleCardSubmit(inputValues) {
   handleSubmit(handleRequest, addCardPopup, true);
 }
 
-function handleChangeAvatar(evt){
-  evt.preventDefaul();
-  const urlInput = evt.target.querySelector('#avatar-url').value;
+function handleChangeAvatar(){
+  const urlInput = document.querySelector('#avatar-url').value;
   console.log("urlInput:", urlInput); // Should log the URL value
   function handleRequest(){
     return api.changeProfileImg(urlInput).then((res) => {
