@@ -29,6 +29,7 @@ const profileDescription = document.querySelector(".profile__description");
 const profileTitleInput = document.querySelector("#profile-title");
 const profileDescriptionInput = document.querySelector("#profile-description");
 const profileEditForm = document.forms["edit-form"];
+const profileAvatarForm = document.forms["profile-picture-form"]
 const cardListEl = document.querySelector(".gallery__cards");
 const cardTemplate = document.querySelector("#card-template").content.firstElementChild;
 const imageModal = document.querySelector("#image-popup-modal");
@@ -136,15 +137,14 @@ addNewCardBtn.addEventListener("click", () => {
 
 document.querySelector("#profile-picture-btn").addEventListener("click", () => {
   editAvatarModal.open();
-  editFormValidator.enableValidation()
 })
 
 
 
 // form validators //
 
-
-
+const avatarChangeValidator = new FormValidator(validationSettings, profileAvatarForm);
+avatarChangeValidator.enableValidation
 const addFormValidator = new FormValidator(validationSettings, addCardForm);
 addFormValidator.enableValidation();
 
