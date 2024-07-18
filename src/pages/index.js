@@ -89,9 +89,7 @@ addCardPopup.setEventListeners();
 
 const editAvatarModal = new PopupWithForm (
   "#profile-picture-modal",
-  (formData) => {
-    handleChangeAvatar(formData.url);
-  }
+    handleChangeAvatar
 )
 editAvatarModal.setEventListeners()
   
@@ -139,7 +137,7 @@ document.querySelector("#profile-picture-btn").addEventListener("click", () => {
   editAvatarModal.open();
 })
 
-
+profileAvatarForm.addEventListener('submit', handleChangeAvatar);
 
 // form validators //
 
@@ -149,7 +147,7 @@ const addFormValidator = new FormValidator(validationSettings, addCardForm);
 addFormValidator.enableValidation();
 
 // API REQUEST //
-function handleSubmit(request, popupInstance, reset, loadingText = "Saving...") {
+function handleSubmit(request, popupInstance, loadingText = "Saving...") {
   if (typeof popupInstance.renderLoading !== 'function') {
     console.error('renderLoading is not a function on', popupInstance);
   }
@@ -200,7 +198,6 @@ function deleteBtnHandler(card) {
 }
 
 function handleCardLike(card){
-  
   if(card.isLiked){
     return api.removeLike(card.id)
     .then(() => {
@@ -232,7 +229,10 @@ function handleCardSubmit(inputValues) {
   handleSubmit(handleRequest, addCardPopup, true);
 }
 
-function handleChangeAvatar(urlInput){
+function handleChangeAvatar(evt){
+  evt.preventDefaul();
+  const urlInput = evt.target.querySelector('#avatar-url').value;
+  console.log("urlInput:", urlInput); // Should log the URL value
   function handleRequest(){
     return api.changeProfileImg(urlInput).then((res) => {
       userInfo.updateProfileImage(res)
@@ -246,7 +246,7 @@ api.loadUserInfo()
         userInfo.updateProfileImage(userData);
         userInfo.setUserInfo({
             name: userData.name,
-            description: userData.about
+            about: userData.about
         });
     })
     .catch((err) => {

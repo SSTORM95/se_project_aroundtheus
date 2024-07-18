@@ -8,12 +8,7 @@ export default class Api{
       return fetch(`${this._baseUrl}/users/me`, {
           headers: this._headers
       })
-      .then(res => {
-          if (!res.ok) {
-              return Promise.reject(`Request failed with status ${res.status}: ${res.statusText}`);
-          }
-          return res.json();
-      });
+      .then(this._handleResponse);
   }
 
     getInitialCards() {
@@ -32,12 +27,7 @@ export default class Api{
               about: data.about
             })
           })
-          .then(res => {
-            if (res.ok) {
-              return res.json();
-            }
-            return Promise.reject(`Error: ${res.status}`);
-          });
+          .then(this._handleResponse);
         }
 
     addNewCard(card) {
@@ -72,14 +62,12 @@ export default class Api{
       })
     }
 
-    changeProfileImg(url){
+    changeProfileImg(url) {
       return fetch(`${this._baseUrl}/users/me/avatar`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: this._headers,
-        body: JSON.stringify({
-          avatar: url,
-        })
-      })
+        body: JSON.stringify({ avatar: url }),
+      }).then(this._handleResponse);
     }
 
     _handleResponse(res) {
