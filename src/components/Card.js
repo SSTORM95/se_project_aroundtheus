@@ -1,6 +1,6 @@
 
 export default class Card{
-    constructor(data, cardSelector, handleImageClick, deleteBtnHandler){
+    constructor(data, cardSelector, handleImageClick, deleteBtnHandler, handleCardLike){
        
        this._data = data
        this._name =data.name;
@@ -9,8 +9,8 @@ export default class Card{
        this._cardSelector = cardSelector;
        this._handleImageClick = handleImageClick;
        this._deleteBtnHandler = deleteBtnHandler;
-       this.isLiked = data.isLiked
-       console.log('Initialized Card:', this);
+       this.isLiked = data.isLiked;
+       this._handleCardLike = handleCardLike;
     }
 
     handleDeleteCard = () => {
@@ -47,7 +47,7 @@ export default class Card{
     }
 
     handleLike(isLiked){
-        this.isLiked = isLiked
+        this.isLiked = isLiked;
         this._handleLikeIcon();
     }
 

@@ -54,25 +54,6 @@ const userInfo = new UserInfo({
     profileImage: ".profile__image"
   });
  
-  function handleProfileEditSubmit(userData) {
-    profileEditPopup.close();
-    userInfo.setUserInfo(userData);
-  }
-
-  function handlesCardSubmit(data){
-    const name = data.title;
-    const link = data.link;
-    
-    const newCardData = { link, name }; 
-  
-
-    const newCard = createCard(newCardData); 
-    cardSection.addItem(newCard);
-    
-    addFormValidator.toggleButtonState();
-    addCardPopup.close();
-  }
-
 // Pop Ups // 
 
 const deleteImgPopup = new DeletePopup("#confirm-modal");
@@ -92,7 +73,7 @@ function handleImageClick(card) {
    
 const profileEditPopup = new PopupWithForm(
     "#profile-edit-modal", 
-    handleEditProfileSubmit()   
+    handleEditProfileSubmit   
   );
   
 profileEditPopup.setEventListeners();
@@ -129,7 +110,6 @@ function createCard(data) {
     deleteBtnHandler,
     handleCardLike
   )
-  console.log('Data object passed to Card:', data);
   return card.getCard();
 }
 
@@ -181,11 +161,8 @@ function handleSubmit(request, popupInstance, reset, loadingText = "Saving...") 
     console.error('Request is not a function', request);
     return;
   }
-
   console.log('Calling request function');
-
   const result = request();
-
   if (!(result instanceof Promise) || typeof result.then !== 'function') {
     console.error('Request did not return a promise', result);
     return;
@@ -195,9 +172,7 @@ function handleSubmit(request, popupInstance, reset, loadingText = "Saving...") 
     .then(() => {
       console.log("Request successful");
       popupInstance.close();
-      if (reset) {
-        popupInstance.reset();
-      }
+
     })
     .catch((error) => {
       console.error("Request failed:", error);
@@ -211,26 +186,23 @@ function handleSubmit(request, popupInstance, reset, loadingText = "Saving...") 
 function deleteBtnHandler(card) {
   deleteImgPopup.open();
   if (card && card.id) {
-    console.log('deleteBtnHandler called for card:', card.id);
-   
     deleteImgPopup.deleteHandler(() => {
       function handleRequest() {
-        console.log('API delete request for card:', card.id);
+        
         return api.deleteCard(card.id).then(() => {
-          console.log('API delete successful for card:', card.id);
+          
           card.handleDeleteCard();
         });
       }
       handleSubmit(handleRequest, deleteImgPopup, false, "Deleting...");
     });
-  } else {
-    console.error('Card or card.id is undefined');
-  }
+  } 
 }
 
 function handleCardLike(card){
+  
   if(card.isLiked){
-    api.removeLike(card.id)
+    return api.removeLike(card.id)
     .then(() => {
       card.handleLike(false);
     })
@@ -239,7 +211,7 @@ function handleCardLike(card){
     })
   }
   if (!card.isLiked){
-    api.addLike(card.id)
+    return api.addLike(card.id)
     .then(() => {
       card.handleLike(true);
     })
@@ -260,9 +232,9 @@ function handleCardSubmit(inputValues) {
   handleSubmit(handleRequest, addCardPopup, true);
 }
 
-function handleChangeAvatar(url){
+function handleChangeAvatar(urlInput){
   function handleRequest(){
-    api.changeProfileImg(url).then((res) => {
+    return api.changeProfileImg(urlInput).then((res) => {
       userInfo.updateProfileImage(res)
     });
   }
@@ -296,30 +268,24 @@ api.loadUserInfo()
   
   })
 
-function handleEditProfileSubmit(){  
-  document.querySelector('#edit-form').addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    const nameInput = document.querySelector('#profile-title');
-    const descriptionInput = document.querySelector('#profile-description');
-    const name = nameInput.value.trim();
-    const about = descriptionInput.value.trim();
-
-    const userData = { name, about };
+function handleEditProfileSubmit(data){  
+    const userData = { name: data.name, about: data.description };
 function handleRequest(){
-  console.log('Calling updateUserInfo with', userData);
+  
+  return new Promise((resolve, reject) => {
     api.updateUserInfo(userData)
-        .then((updatedUserData) => {
-            userInfo.setUserInfo(updatedUserData);
-            const modal = profileEditModal;
-            modal.classList.remove('modal_opened');
-            modal.querySelector('#edit-form').reset(); 
-        })
-        .catch((err) => {
-            console.error(`Update failed, Error: ${err}`);
-        });
+      .then((updatedUserData) => {
+        userInfo.setUserInfo(updatedUserData);
+        const modal = profileEditModal;
+        modal.classList.remove('modal_opened');
+        modal.querySelector('#edit-form').reset();
+        resolve(updatedUserData);
+      })
+      .catch((err) => {
+       
+        reject(err);
+      });
+  });
       }
       handleSubmit(handleRequest, profileEditPopup, true)
-});
-      
 }

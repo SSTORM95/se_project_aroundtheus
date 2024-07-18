@@ -39,6 +39,7 @@ export default class Api{
             return Promise.reject(`Error: ${res.status}`);
           });
         }
+
     addNewCard(card) {
         return fetch("https://around-api.en.tripleten-services.com/v1/cards", {
           method: "POST",
@@ -71,12 +72,12 @@ export default class Api{
       })
     }
 
-    changeProfileImg(link){
-      return fetch("https://around-api.en.tripleten-services.com/v1/users/me/avatar", {
+    changeProfileImg(url){
+      return fetch(`${this._baseUrl}/users/me/avatar`, {
         method: "PATCH",
         headers: this._headers,
         body: JSON.stringify({
-          avatar: link
+          avatar: url,
         })
       })
     }

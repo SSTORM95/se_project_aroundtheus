@@ -3,8 +3,9 @@ export default class Popup{
         this._popupElement = document.querySelector(popupSelector);
         this._closeBtn = this._popupElement.querySelector("#modal-close-button");
         this._modalButton = this._popupElement.querySelector(".modal__button")
-      
+        this._modalBtnContent = this._modalButton ? this._modalButton.textContent : "";
     }
+
 
     open(){
         this._popupElement.classList.add("modal_opened");
@@ -31,9 +32,9 @@ export default class Popup{
     }
     
     renderLoading(isLoading, loadingText = "Deleting...") {
-        this._modalButton.textContent = isLoading ? loadingText : this._modalButton.textContent;
-      }
-
+        this._modalButton.textContent = isLoading ? loadingText : this._modalBtnContent;
+    }
+    
     setEventListeners(){
         
         this._popupElement.addEventListener("mousedown", (evt) => {
