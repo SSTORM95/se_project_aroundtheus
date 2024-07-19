@@ -148,18 +148,14 @@ addFormValidator.enableValidation();
 
 // API REQUEST //
 function handleSubmit(request, popupInstance, reset,  loadingText = "Saving...") {
-  if (typeof popupInstance.renderLoading !== 'function') {
-    console.error('renderLoading is not a function on', popupInstance);
-  }
-
-  console.log("Entering handleSubmit");
+  
   popupInstance.renderLoading(true, loadingText);
   
   if (typeof request !== 'function') {
     console.error('Request is not a function', request);
     return;
   }
-  console.log('Calling request function');
+  
   const result = request();
   if (!(result instanceof Promise) || typeof result.then !== 'function') {
     console.error('Request did not return a promise', result);
@@ -168,7 +164,7 @@ function handleSubmit(request, popupInstance, reset,  loadingText = "Saving...")
 
   result
     .then(() => {
-      console.log("Request successful");
+      
       popupInstance.close();
 
     })
@@ -176,7 +172,6 @@ function handleSubmit(request, popupInstance, reset,  loadingText = "Saving...")
       console.error("Request failed:", error);
     })
     .finally(() => {
-      console.log("Resetting loading state");
       popupInstance.renderLoading(false);
     });
 }
