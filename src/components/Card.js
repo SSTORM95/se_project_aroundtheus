@@ -27,7 +27,7 @@ export default class Card{
         this._trashBtn = this._cardElement.querySelector("#card-trash-button");
         this._cardImg = this._cardElement.querySelector(".card__image");
 
-    this._likeBtn.addEventListener('click', () => this._handleCardLike(this));
+    this._likeBtn.addEventListener('click', () => (this._handleCardLike(this)));
 
     this._trashBtn.addEventListener('click', () => (this._deleteBtnHandler(this)));
 
