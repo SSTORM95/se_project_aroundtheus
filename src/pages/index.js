@@ -29,7 +29,8 @@ const profileDescription = document.querySelector(".profile__description");
 const profileTitleInput = document.querySelector("#profile-title");
 const profileDescriptionInput = document.querySelector("#profile-description");
 const profileEditForm = document.forms["edit-form"];
-const profileAvatarForm = document.forms["profile-picture-form"]
+const profileAvatarForm = document.forms["profile-picture-form"];
+const profileImageModal = document.querySelector("#profile-picture-modal");
 const cardListEl = document.querySelector(".gallery__cards");
 const cardTemplate = document.querySelector("#card-template").content.firstElementChild;
 const imageModal = document.querySelector("#image-popup-modal");
@@ -137,12 +138,31 @@ document.querySelector("#profile-picture-btn").addEventListener("click", () => {
   editAvatarModal.open();
 })
 
-profileAvatarForm.addEventListener('submit', handleChangeAvatar);
+addCardModal.addEventListener("submit", () => {
+  const modalButton = addCardForm.querySelector(".modal__button");
+  if(!addCardModal.classList.contains(".modal_opened")){
+    modalButton.disabled = true;
+    setTimeout(function() {
+      modalButton.classList.add("modal__button_disabled");
+    },500)
+  }
+})
+
+profileImageModal.addEventListener("submit", () => {
+  const modalButton = profileAvatarForm.querySelector(".modal__button");
+  if(!profileImageModal.classList.contains(".modal_opened")){
+    modalButton.disabled = true;
+    setTimeout(function() {
+      modalButton.classList.add("modal__button_disabled");
+    },500)
+  }
+})
 
 // form validators //
 
 const avatarChangeValidator = new FormValidator(validationSettings, profileAvatarForm);
-avatarChangeValidator.enableValidation
+avatarChangeValidator.enableValidation();
+
 const addFormValidator = new FormValidator(validationSettings, addCardForm);
 addFormValidator.enableValidation();
 
