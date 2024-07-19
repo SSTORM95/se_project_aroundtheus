@@ -147,7 +147,7 @@ const addFormValidator = new FormValidator(validationSettings, addCardForm);
 addFormValidator.enableValidation();
 
 // API REQUEST //
-function handleSubmit(request, popupInstance, loadingText = "Saving...") {
+function handleSubmit(request, popupInstance, reset,  loadingText = "Saving...") {
   if (typeof popupInstance.renderLoading !== 'function') {
     console.error('renderLoading is not a function on', popupInstance);
   }
