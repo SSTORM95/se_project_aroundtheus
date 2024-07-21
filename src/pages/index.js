@@ -213,7 +213,7 @@ function deleteBtnHandler(card) {
 }
 
 function handleCardLike(card){
-  if(card.isLiked){
+  if(!card.isLiked){    
     return api.removeLike(card.id)
     .then(() => {
       card.handleLike(false);
@@ -222,7 +222,7 @@ function handleCardLike(card){
       console.log(`Unable to process request, ${err}`);
     })
   }
-  if (!card.isLiked){
+  if (card.isLiked){
     return api.addLike(card.id)
     .then(() => {
       card.handleLike(true);
@@ -272,8 +272,8 @@ api.loadUserInfo()
   .then((cards) => {
     const cardSection = new Section (
       {items: cards,
-          renderer : ({ link, name, _id }) => {
-              renderCard({ link, name, _id });
+          renderer : ({ link, name, _id, isLiked }) => {
+              renderCard({ link, name, _id, isLiked });
           }
       },
       ".gallery__cards" 
