@@ -30,7 +30,6 @@ export default class Card {
     this._cardImg = this._cardElement.querySelector(".card__image");
 
     this._likeBtn.addEventListener("click", () => {
-      this.toggleLikeUI();
       this._handleCardLike(this);
     });
 
@@ -39,11 +38,6 @@ export default class Card {
     );
 
     this._cardImg.addEventListener("click", () => this._handleImageClick(this));
-  }
-
-  toggleLikeUI() {
-    this.isLiked = !this.isLiked;
-    this._updateLikeIcon();
   }
 
   _updateLikeIcon() {

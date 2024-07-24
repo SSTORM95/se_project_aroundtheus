@@ -181,7 +181,7 @@ function deleteBtnHandler(card) {
 }
 
 function handleCardLike(card) {
-  if (!card.isLiked) {
+  if (card.isLiked) {
     return api
       .removeLike(card.id)
       .then(() => {
@@ -191,7 +191,7 @@ function handleCardLike(card) {
         console.log(`Unable to process request, ${err}`);
       });
   }
-  if (card.isLiked) {
+  if (!card.isLiked) {
     return api
       .addLike(card.id)
       .then(() => {
