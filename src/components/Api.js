@@ -64,12 +64,12 @@ export default class Api {
     });
   }
 
-  changeProfileImg(url) {
+  changeProfileImg(avatar) {
     return this._request(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
       headers: this._headers,
-      body: JSON.stringify({ avatar: url }),
-    })
+      body: JSON.stringify({avatar:`${avatar.link}`}),
+    });
   }
 
   _handleResponse(res) {

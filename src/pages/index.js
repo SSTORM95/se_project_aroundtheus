@@ -20,6 +20,7 @@ const cardTitleInput = addCardForm.querySelector("#card-title");
 const cardLinkInput = addCardForm.querySelector("#card-link");
 const addNewCardBtn = document.querySelector("#profile-add-button");
 const profileEditBtn = document.querySelector("#profile-edit-button");
+const changeAvatarBtn = document.querySelector("#profile-picture-btn");
 const profileEditModal = document.querySelector("#profile-edit-modal");
 const profileModalCLoseButton = profileEditModal.querySelector(
   "#modal-close-button"
@@ -124,7 +125,7 @@ addNewCardBtn.addEventListener("click", () => {
   formValidators["add-form"].resetValidation();
 });
 
-document.querySelector("#profile-picture-btn").addEventListener("click", () => {
+changeAvatarBtn.addEventListener("click", () => {
   editAvatarModal.open();
   formValidators["profile-picture-form"].resetValidation();
 });
@@ -212,11 +213,9 @@ function handleCardSubmit(inputValues) {
   handleSubmit(handleRequest, addCardPopup, true);
 }
 
-function handleChangeAvatar() {
-  const urlInput = document.querySelector("#avatar-url").value;
-
+function handleChangeAvatar(input) {
   function handleRequest() {
-    return api.changeProfileImg(urlInput).then((res) => {
+    return api.changeProfileImg(input).then((res) => {
       userInfo.updateProfileImage(res);
     });
   }
