@@ -15,6 +15,10 @@
     row-gap: 7px;
 }
 
+.profile__image-container{
+    position: relative;
+}
+
 .profile__image {
     height: 120px;
     width: 120px;
@@ -22,6 +26,31 @@
     object-fit: cover;
     background-position: center;
     margin-right: 30px;
+}
+
+.profile-picture-button{
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: center
+    url(../images/profile-photo-edit.svg)
+    no-repeat
+    rgb(0, 0, 0, .8)
+    ;
+    margin-right: 30px;
+    display: none;
+    position: absolute;
+    left: 0;
+    border: solid 0px;
+    cursor: pointer;
+ 
+}
+
+
+.profile__image:hover + .profile-picture-button, .profile-picture-button:hover {
+    display: inline-block;
+   
 }
 
 .profile__title {
